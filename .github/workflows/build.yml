@@ -1,0 +1,37 @@
+name: Build gdown Executable
+
+# Trigger on push to main and on a daily schedule (adjust cron as needed)
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * *'  # runs daily at midnight UTC
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Set Up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller gdown
+
+    - name: Build Executable with PyInstaller
+      run: |
+        pyinstaller --onefile --name gdown_exe gdownpython.py
+
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: gdown_exe
+        path: dist/gdown_exe.exe
