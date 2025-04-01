@@ -8,11 +8,11 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
         python-version: ["3.8"]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
  
@@ -55,5 +55,30 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-            name: gdown-artifacts-${{ matrix.os }}
-            path: dist/
+          name: gdown-artifacts-${{ matrix.os }}
+          path: dist/
+
+  release:
+    if: github.event_name == 'push'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+ 
+      - name: Create Tag
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git tag "v${{ github.run_number }}"
+          git push origin "v${{ github.run_number }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+ 
+      - name: Create Release
+        uses: elgohr/Github-Release-Action@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag: "v${{ github.run_number }}"
+          name: "Release v${{ github.run_number }}"
+          body: "Automatically generated release for commit ${{ github.sha }}"
