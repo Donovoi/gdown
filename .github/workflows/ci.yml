@@ -56,14 +56,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Download the Windows artifact into ./dist/
+      # Download the Windows build artifact into ./dist/
       - name: Download Windows build artifact
         uses: actions/download-artifact@v4
         with:
           name: gdown-artifacts-windows-latest
           path: "./dist/"
 
-      # Flatten the directory structure: move files up if they were extracted into a subfolder.
+      # Flatten the directory structure if the artifact was extracted into a subfolder.
       - name: Flatten artifact directory
         run: |
           if [ -d "./dist/gdown-artifacts-windows-latest" ]; then
