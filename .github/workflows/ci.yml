@@ -52,7 +52,7 @@ jobs:
           pyinstaller --onefile --name gdown.exe gdownpython.py
           dir dist
  
-      - name: Upload build artifacts
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: gdown-artifacts-${{ matrix.os }}
@@ -64,7 +64,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
- 
+
+      # Download the Windows artifact to attach it to the release.
+      - name: Download Windows build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: gdown-artifacts-windows-latest
+          path: ./dist
+
       - name: Create Tag
         run: |
           git config user.name "GitHub Actions"
@@ -80,5 +87,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag: "v${{ github.run_number }}"
-          name: "Release v${{ github.run_number }}"
-          body: "Automatically generated release for commit ${{ github.sha }}"
+          title: "Release v${{ github.run_number }}"
+          workdir: "./dist"
+          prerelease: "false"
