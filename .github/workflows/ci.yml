@@ -21,21 +21,10 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
  
-      #- name: Install Make (Windows only)
-      #  if: matrix.os == 'windows-latest'
-      #  run: choco install make
- 
       - name: Install Package for Testing
         run: |
           pip install --upgrade pip wheel setuptools
           pip install .[test]
- 
-      #- name: Lint
-      #  if: matrix.os != 'windows-latest'
-      #  run: make lint
- 
-      #- name: Test
-      #  run: make test
  
       - name: Build Distribution and Install from Dist
         shell: bash
@@ -67,12 +56,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Download the Windows artifact. This will download into "./dist/gdown-artifacts-windows-latest"
+      # Download the Windows artifact into ./dist/
       - name: Download Windows build artifact
         uses: actions/download-artifact@v4
         with:
           name: gdown-artifacts-windows-latest
           path: "./dist/"
+
+      # Flatten the directory structure: move files up if they were extracted into a subfolder.
+      - name: Flatten artifact directory
+        run: |
+          if [ -d "./dist/gdown-artifacts-windows-latest" ]; then
+            mv ./dist/gdown-artifacts-windows-latest/* ./dist/
+            rm -r ./dist/gdown-artifacts-windows-latest
+          fi
 
       - name: Create Tag
         run: |
