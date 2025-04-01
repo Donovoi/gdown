@@ -1,30 +1,50 @@
-name: Build gdown Executable
+name: Build Windows Executable
 
-on: [push, pull_request]
+# Trigger the workflow when you push a tag (e.g. v1.0.0)
+on:
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+    - name: Checkout Repository
+      uses: actions/checkout@v3
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
-        python-version: 3.x
+        python-version: '3.9'
 
-    - name: Install dependencies
+    - name: Install Build Dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install --upgrade pip
+        pip install pyinstaller gdown
 
-    - name: Build executable
-      run: pyinstaller --onefile gdownpython.py
+    - name: Build Executable with PyInstaller
+      run: |
+        pyinstaller --onefile --name gdown.exe gdownpython.py
+      # This assumes you have a wrapper script (gdown_wrapper.py) that calls gdown's main,
+      # for example:
+      #   from gdown.__main__ import main
+      #   if __name__ == "__main__":
+      #       main()
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
+    - name: Create GitHub Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
       with:
-        name: my-artifact
-        path: ./gdown.exe # Ensure this path matches the location of your built executable
+        tag_name: ${{ github.ref }}
+        name: Release ${{ github.ref }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload Windows Artifact
+      uses: softprops/action-gh-release@v1
+      with:
+        files: dist\gdown_exe.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
