@@ -46,5 +46,5 @@ jobs:
       - name: Build for Windows
         if: matrix.os == 'windows-latest'
         run: |
-          pyinstaller --onefile --name gdown.exe gdown_wrapper.py
+          pyinstaller --onefile --name gdown.exe gdownpython.py
           dir dist
