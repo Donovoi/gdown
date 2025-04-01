@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - name: Checkout code
@@ -27,4 +27,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: my-artifact
-        path: dist/gdown # Ensure this path matches the location of your built executable
+        path: dist/gdown.exe # Ensure this path matches the location of your built executable
