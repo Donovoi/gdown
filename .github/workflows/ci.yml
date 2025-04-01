@@ -67,7 +67,7 @@ jobs:
 
       # Download the Windows artifact to attach it to the release.
       - name: Download Windows build artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: gdown-artifacts-windows-latest
           path: ./dist
