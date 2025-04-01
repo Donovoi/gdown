@@ -58,7 +58,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: gdown-artifacts-${{ matrix.os }}
-          path: "./dist/"
+          path: "./dist/*"
 
   release:
     if: github.event_name == 'push'
