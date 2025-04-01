@@ -20,9 +20,7 @@ from .exceptions import FolderContentsMaximumLimitError
 
 class _ShowVersionAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
-        print(
-            f"gdown {__version__} at {os.path.dirname(os.path.dirname(__file__))}"
-        )
+        print(f"gdown {__version__} at {os.path.dirname(os.path.dirname(__file__))}")
         parser.exit()
 
 
@@ -214,8 +212,7 @@ def main():
     except requests.exceptions.ProxyError as e:
         error_msg = indent("\n".join(textwrap.wrap(str(e))), prefix="\t")
         print(
-            f"Failed to use proxy:\n\n{error_msg}\n\n"
-            "Please check your proxy settings.",
+            f"Failed to use proxy:\n\n{error_msg}\n\nPlease check your proxy settings.",
             file=sys.stderr,
         )
         sys.exit(1)
