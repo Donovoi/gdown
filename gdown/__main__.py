@@ -204,22 +204,25 @@ def main():
         print(e, file=sys.stderr)
         sys.exit(1)
     except FolderContentsMaximumLimitError as e:
+        error_msg = indent("\n".join(textwrap.wrap(str(e))), prefix="\t")
         print(
-            f"Failed to retrieve folder contents:\n\n{indent('\n'.join(textwrap.wrap(str(e))), prefix='\t')}\n\n"
+            f"Failed to retrieve folder contents:\n\n{error_msg}\n\n"
             "You can use `--remaining-ok` option to ignore this error.",
             file=sys.stderr,
         )
         sys.exit(1)
     except requests.exceptions.ProxyError as e:
+        error_msg = indent("\n".join(textwrap.wrap(str(e))), prefix="\t")
         print(
-            f"Failed to use proxy:\n\n{indent('\n'.join(textwrap.wrap(str(e))), prefix='\t')}\n\n"
+            f"Failed to use proxy:\n\n{error_msg}\n\n"
             "Please check your proxy settings.",
             file=sys.stderr,
         )
         sys.exit(1)
     except Exception as e:
+        error_msg = indent("\n".join(textwrap.wrap(str(e))), prefix="\t")
         print(
-            f"Error:\n\n{indent('\n'.join(textwrap.wrap(str(e))), prefix='\t')}\n\n"
+            f"Error:\n\n{error_msg}\n\n"
             "To report issues, please visit https://github.com/wkentaro/gdown/issues.",
             file=sys.stderr,
         )
