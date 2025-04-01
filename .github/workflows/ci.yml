@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
-        python-version: ["3.8"]
+        python-version: ["3.12"]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -26,7 +26,9 @@ jobs:
         run: choco install make
  
       - name: Install Package for Testing
-        run: pip install .[test]
+        run: |
+          pip install --upgrade pip wheel setuptools
+          pip install .[test]
  
       - name: Lint
         if: matrix.os != 'windows-latest'
@@ -70,7 +72,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: gdown-artifacts-windows-latest
-          path: ./dist
+          path: "./dist/"
 
       - name: Create Tag
         run: |
