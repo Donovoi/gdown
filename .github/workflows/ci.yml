@@ -13,42 +13,47 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
         python-version: ["3.8"]
-
     steps:
-       - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
  
-       - name: Set up Python
-         uses: actions/setup-python@v4
-         with:
-           python-version: ${{ matrix.python-version }}
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
  
-       - name: Install Make (Windows only)
-         if: matrix.os == 'windows-latest'
-         run: choco install make
+      - name: Install Make (Windows only)
+        if: matrix.os == 'windows-latest'
+        run: choco install make
  
-       - name: Install Package for Testing
-         run: pip install .[test]
+      - name: Install Package for Testing
+        run: pip install .[test]
  
-       - name: Lint
-         if: matrix.os != 'windows-latest'
-         run: make lint
+      - name: Lint
+        if: matrix.os != 'windows-latest'
+        run: make lint
  
-       - name: Test
-         run: make test
+      - name: Test
+        run: make test
  
-       - name: Build Distribution and Install from Dist
-         shell: bash
-         run: |
-           make build
-           pip install dist/gdown-*.tar.gz
-           pip install dist/gdown-*.whl
+      - name: Build Distribution and Install from Dist
+        shell: bash
+        run: |
+          make build
+          pip install dist/gdown-*.tar.gz
+          pip install dist/gdown-*.whl
  
-       - name: Install PyInstaller (Windows only)
-         if: matrix.os == 'windows-latest'
-         run: pip install pyinstaller
+      - name: Install PyInstaller (Windows only)
+        if: matrix.os == 'windows-latest'
+        run: pip install pyinstaller
  
-       - name: Build for Windows
-         if: matrix.os == 'windows-latest'
-         run: |
-           pyinstaller --onefile --name gdown.exe gdownpython.py
-           dir dist
+      - name: Build for Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          pyinstaller --onefile --name gdown.exe gdownpython.py
+          dir dist
+ 
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: gdown-artifacts
+          path: dist/
