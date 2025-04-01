@@ -21,7 +21,7 @@ jobs:
         pip install -r requirements.txt
 
     - name: Build executable
-      run: pyinstaller --onefile your_script.py
+      run: pyinstaller --onefile gdownpython.py
 
     - name: Upload artifact
       uses: actions/upload-artifact@v3
