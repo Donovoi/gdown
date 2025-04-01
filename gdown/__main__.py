@@ -1,3 +1,5 @@
+"""Command-line interface for gdown package."""
+
 import argparse
 import os.path
 import re
@@ -19,14 +21,29 @@ from .exceptions import FolderContentsMaximumLimitError
 class _ShowVersionAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         print(
-            "gdown {ver} at {pos}".format(
-                ver=__version__, pos=os.path.dirname(os.path.dirname(__file__))
-            )
+            f"gdown {__version__} at {os.path.dirname(os.path.dirname(__file__))}"
         )
         parser.exit()
 
 
 def file_size(argv):
+    """Convert file size string to bytes.
+
+    Parameters
+    ----------
+    argv : str
+        File size string in format like '10MB', '1GB', etc.
+
+    Returns
+    -------
+    float
+        Size in bytes
+
+    Raises
+    ------
+    TypeError
+        If the format is invalid
+    """
     if argv is not None:
         m = re.match(r"([0-9]+)(GB|MB|KB|B)", argv)
         if not m:
@@ -45,6 +62,7 @@ def file_size(argv):
 
 
 def main():
+    """Main entry point for the gdown command-line interface."""
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
@@ -62,8 +80,7 @@ def main():
         "-O",
         "--output",
         help=(
-            f'output file name/path; end with "{os.path.sep}"'
-            "to create a new directory"
+            f'output file name/path; end with "{os.path.sep}"to create a new directory'
         ),
     )
     parser.add_argument(
@@ -188,27 +205,22 @@ def main():
         sys.exit(1)
     except FolderContentsMaximumLimitError as e:
         print(
-            "Failed to retrieve folder contents:\n\n{}\n\n"
-            "You can use `--remaining-ok` option to ignore this error.".format(
-                indent("\n".join(textwrap.wrap(str(e))), prefix="\t")
-            ),
+            f"Failed to retrieve folder contents:\n\n{indent('\n'.join(textwrap.wrap(str(e))), prefix='\t')}\n\n"
+            "You can use `--remaining-ok` option to ignore this error.",
             file=sys.stderr,
         )
         sys.exit(1)
     except requests.exceptions.ProxyError as e:
         print(
-            "Failed to use proxy:\n\n{}\n\nPlease check your proxy settings.".format(
-                indent("\n".join(textwrap.wrap(str(e))), prefix="\t")
-            ),
+            f"Failed to use proxy:\n\n{indent('\n'.join(textwrap.wrap(str(e))), prefix='\t')}\n\n"
+            "Please check your proxy settings.",
             file=sys.stderr,
         )
         sys.exit(1)
     except Exception as e:
         print(
-            "Error:\n\n{}\n\nTo report issues, please visit "
-            "https://github.com/wkentaro/gdown/issues.".format(
-                indent("\n".join(textwrap.wrap(str(e))), prefix="\t")
-            ),
+            f"Error:\n\n{indent('\n'.join(textwrap.wrap(str(e))), prefix='\t')}\n\n"
+            "To report issues, please visit https://github.com/wkentaro/gdown/issues.",
             file=sys.stderr,
         )
         sys.exit(1)
