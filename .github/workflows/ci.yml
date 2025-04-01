@@ -88,5 +88,5 @@ jobs:
         with:
           tag: "v${{ github.run_number }}"
           title: "Release v${{ github.run_number }}"
-          files: "./dist/gdown-artifacts-windows-latest/*"
+          workdir: "./dist/gdown-artifacts-windows-latest/"
           prerelease: "false"
