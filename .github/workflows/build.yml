@@ -21,10 +21,10 @@ jobs:
         pip install -r requirements.txt
 
     - name: Build executable
-      run: pyinstaller --onefile your_script.py
+      run: pyinstaller --onefile gdownpython.py
 
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
         name: my-artifact
-        path: dist/gdown # Update this path to the location of your built executable
+        path: dist/gdown # Ensure this path matches the location of your built executable
