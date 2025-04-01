@@ -27,4 +27,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: my-artifact
-        path: dist/gdown.exe # Ensure this path matches the location of your built executable
+        path: ./gdown.exe # Ensure this path matches the location of your built executable
