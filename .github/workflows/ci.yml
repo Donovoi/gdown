@@ -52,13 +52,13 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           pyinstaller --onefile --name gdown.exe gdownpython.py
-          dir dist
+          cp gdown.exe dist
  
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: gdown-artifacts-${{ matrix.os }}
-          path: dist/
+          path: "./dist/"
 
   release:
     if: github.event_name == 'push'
@@ -90,5 +90,5 @@ jobs:
         with:
           tag: "v${{ github.run_number }}"
           title: "Release v${{ github.run_number }}"
-          workdir: "dist/"
+          workdir: "./dist/"
           prerelease: "false"
